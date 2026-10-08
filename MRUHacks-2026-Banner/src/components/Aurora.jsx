@@ -77,16 +77,14 @@ void main() {
   float intensity = 0.6 * height;
   float auroraAlpha = smoothstep(0.20 - uBlend * 0.5, 0.20 + uBlend * 0.5, intensity);
   vec3 auroraColor = intensity * rampColor;
-  if (uLightMode > 0.5) {
-    float energy = clamp(max(intensity, 0.0), 0.0, 1.0);
-    float coverage = clamp(auroraAlpha * (0.55 + 0.45 * energy), 0.0, 0.86);
-    vec3 chroma = pow(clamp(rampColor, 0.0, 1.0), vec3(1.2));
-    float chromaPeak = max(chroma.r, max(chroma.g, chroma.b));
-    chroma /= max(chromaPeak, 0.0001);
-    fragColor = vec4(mix(vec3(1.0), chroma, min(coverage * 1.08, 0.94)), 1.0);
-  } else {
-    fragColor = vec4(auroraColor * auroraAlpha, auroraAlpha);
-  }
+  vec4 darkColor = vec4(auroraColor * auroraAlpha, auroraAlpha);
+  float energy = clamp(max(intensity, 0.0), 0.0, 1.0);
+  float coverage = clamp(auroraAlpha * (0.55 + 0.45 * energy), 0.0, 0.86);
+  vec3 chroma = pow(clamp(rampColor, 0.0, 1.0), vec3(1.2));
+  float chromaPeak = max(chroma.r, max(chroma.g, chroma.b));
+  chroma /= max(chromaPeak, 0.0001);
+  vec4 lightColor = vec4(mix(vec3(1.0), chroma, min(coverage * 1.08, 0.94)), 1.0);
+  fragColor = mix(darkColor, lightColor, clamp(uLightMode, 0.0, 1.0));
 }`
 
 function Aurora({
@@ -98,8 +96,21 @@ function Aurora({
 }) {
   const containerRef = useRef(null)
   const propsRef = useRef({ colorStops, amplitude, blend, speed, lightMode })
+  const lightModeTransitionRef = useRef({
+    from: lightMode ? 1 : 0,
+    target: lightMode ? 1 : 0,
+    value: lightMode ? 1 : 0,
+    startedAt: performance.now(),
+  })
 
   propsRef.current = { colorStops, amplitude, blend, speed, lightMode }
+
+  useEffect(() => {
+    const transition = lightModeTransitionRef.current
+    transition.from = transition.value
+    transition.target = lightMode ? 1 : 0
+    transition.startedAt = performance.now()
+  }, [lightMode])
 
   useEffect(() => {
     const container = containerRef.current
@@ -141,10 +152,13 @@ function Aurora({
     let animationFrame = 0
     const update = time => {
       const props = propsRef.current
+      const transition = lightModeTransitionRef.current
+      const progress = Math.min((performance.now() - transition.startedAt) / 2000, 1)
+      transition.value = transition.from + (transition.target - transition.from) * progress
       program.uniforms.uTime.value = time * 0.001 * props.speed
       program.uniforms.uAmplitude.value = props.amplitude
       program.uniforms.uBlend.value = props.blend
-      program.uniforms.uLightMode.value = props.lightMode ? 1 : 0
+      program.uniforms.uLightMode.value = transition.value
       program.uniforms.uColorStops.value = props.colorStops.map(hex => {
         const color = new Color(hex)
         return [color.r, color.g, color.b]

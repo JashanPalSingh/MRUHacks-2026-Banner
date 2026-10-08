@@ -23,6 +23,12 @@
   max-width: 90vw;
   object-fit: contain;
   transform: translate(-50%, -50%);
+  opacity: 1;
+  transition: opacity 2s ease;
+}
+
+.banner-image-hidden {
+  opacity: 0;
 }
 
 .theme-toggle {
@@ -41,6 +47,73 @@
   font-size: 17px;
   line-height: 1;
   backdrop-filter: blur(6px);
+}
+
+.clock-toggle {
+  position: fixed;
+  right: 56px;
+  bottom: 16px;
+  z-index: 2;
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border: 1px solid rgba(8, 6, 13, 0.25);
+  border-radius: 50%;
+  color: #08060d;
+  background: rgba(255, 255, 255, 0.7);
+  cursor: pointer;
+  font-size: 17px;
+  line-height: 1;
+  backdrop-filter: blur(6px);
+}
+
+.clock-toggle:hover {
+  background: rgba(255, 255, 255, 0.95);
+}
+
+.clock-toggle:focus-visible {
+  outline: 2px solid #08060d;
+  outline-offset: 3px;
+}
+
+.clock-panel {
+  position: fixed;
+  top: 16px;
+  left: 16px;
+  z-index: 2;
+  display: flex;
+  width: 25vw;
+  max-width: 25vw;
+  height: 25vh;
+  max-height: 25vh;
+  box-sizing: border-box;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+  color: #08060d;
+  transition: color 2s ease, text-shadow 2s ease;
+  text-align: center;
+  text-shadow: 0 1px 12px rgba(255, 255, 255, 0.35);
+}
+
+.clock-panel-dark {
+  color: #fff;
+  text-shadow: 0 1px 12px rgba(0, 0, 0, 0.4);
+}
+
+.clock-time {
+  font-size: clamp(72px, 10vw, 72px);
+  font-weight: 900;
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.clock-date {
+  margin-top: 8px;
+  font-size: clamp(7px, 1.1vw, 18px);
+  font-weight: 500;
+  line-height: 1.2;
 }
 
 .theme-toggle:hover {
