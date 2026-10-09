@@ -143,8 +143,18 @@
   gap: 12px;
   padding: 12px;
   border-radius: 12px;
-  background: rgba(128, 128, 128, 0.34);
+  background: linear-gradient(
+    to right,
+    #fff var(--event-progress),
+    rgba(219, 219, 219, 0.75) var(--event-progress)
+  );
+  color: #08060d;
+  transition: background 60s linear;
   text-align: left;
+}
+
+.schedule-panel-dark .current-event {
+  color: #08060d;
 }
 
 .event-details {

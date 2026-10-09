@@ -11,23 +11,26 @@ const events = parseSchedule(eventsCsv)
 function App() {
   const [darkMode, setDarkMode] = useState(false)
   const [clockVisible, setClockVisible] = useState(false)
-  // const [currentTime, setCurrentTime] = useState(() => new Date())
-const [currentTime, setCurrentTime] = useState(
-  () => new Date('2026-10-24T02:30:00Z')
-)
+  const [currentTime, setCurrentTime] = useState(() => new Date())
+// const [currentTime, setCurrentTime] = useState(
+//   () => new Date('2026-10-24T06:30:00Z')
+// )
 
-  // useEffect(() => {
-  //   if (!clockVisible) return undefined
-  //   const interval = window.setInterval(() => setCurrentTime(new Date()), 60000)
-  //   return () => window.clearInterval(interval)
-  // }, [clockVisible])
+  useEffect(() => {
+    if (!clockVisible) return undefined
+    const interval = window.setInterval(() => setCurrentTime(new Date()), 60000)
+    return () => window.clearInterval(interval)
+  }, [clockVisible])
 
-useEffect(() => {
-  if (!clockVisible) return undefined
-  return undefined
-}, [clockVisible])
+// useEffect(() => {
+//   if (!clockVisible) return undefined
+//   return undefined
+// }, [clockVisible])
 
   const { current: currentEvent, upcoming: upcomingEvents } = getVisibleEvents(events, currentTime)
+  const currentEventProgress = currentEvent
+    ? Math.min(Math.max((currentTime - currentEvent.start) / (currentEvent.end - currentEvent.start), 0), 1)
+    : 0
 
   const time = new Intl.DateTimeFormat('en-US', {
     timeZone: 'America/Edmonton',
@@ -70,7 +73,10 @@ useEffect(() => {
           </section>
           <section className={`schedule-panel ${darkMode ? 'schedule-panel-dark' : ''}`} aria-label="Event schedule">
             {currentEvent && (
-              <article className="current-event">
+              <article
+                className="current-event"
+                style={{ '--event-progress': `${currentEventProgress * 100}%` }}
+              >
                 <div className="event-details">
                   <strong className="current-event-title">{currentEvent.title}</strong>
                   <span className="current-event-location">{currentEvent.location}</span>
