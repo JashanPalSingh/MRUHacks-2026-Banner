@@ -4,6 +4,7 @@ import { defineConfig } from 'vite'
 
 // https://vite.dev/config/
 export default defineConfig({
+  base: '/MRUHacks-2026-Banner/',
   plugins: [
     react(),
     babel({ presets: [reactCompilerPreset()] })
