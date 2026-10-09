@@ -82,8 +82,8 @@
   left: 16px;
   z-index: 2;
   display: flex;
-  width: 25vw;
-  max-width: 25vw;
+  width: 20vw;
+  max-width: 20vw;
   height: 25vh;
   max-height: 25vh;
   box-sizing: border-box;
@@ -103,7 +103,7 @@
 }
 
 .clock-time {
-  font-size: clamp(72px, 10vw, 72px);
+  font-size: clamp(1px, 15vw, 10rem);
   font-weight: 900;
   line-height: 1;
   white-space: nowrap;
@@ -111,9 +111,115 @@
 
 .clock-date {
   margin-top: 8px;
-  font-size: clamp(7px, 1.1vw, 18px);
+  font-size: clamp(1rem, 1.1vw, 5rem);
   font-weight: 500;
   line-height: 1.2;
+}
+
+.schedule-panel {
+  position: fixed;
+  top: calc(25vh + 32px);
+  bottom: 0;
+  left: 16px;
+  z-index: 2;
+  display: flex;
+  width: 20vw;
+  max-width: 20vw;
+  box-sizing: border-box;
+  flex-direction: column;
+  overflow: hidden;
+  color: #08060d;
+  transition: color 2s ease;
+}
+
+.schedule-panel-dark {
+  color: #fff;
+}
+
+.current-event {
+  display: grid;
+  flex: none;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  padding: 12px;
+  border-radius: 12px;
+  background: rgba(128, 128, 128, 0.34);
+  text-align: left;
+}
+
+.event-details {
+  min-width: 0;
+}
+
+.current-event-title,
+.upcoming-event-title {
+  display: block;
+  overflow-wrap: anywhere;
+}
+
+.current-event-title {
+  font-size: clamp(1.5rem, 1.2vw, 2rem);
+  font-weight: 900;
+  line-height: 1.1;
+}
+
+.current-event-location{
+  display: block;
+  margin-top: 4px;
+  font-size: clamp(0.95rem, 0.85vw, 1.2rem);
+  font-weight: 300;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.upcoming-event-location {
+  display: block;
+  margin-top: 4px;
+  font-size: clamp(0.65rem, 0.85vw, 0.9rem);
+  font-weight: 300;
+  line-height: 1.2;
+  overflow-wrap: anywhere;
+}
+
+.current-event-time,
+.upcoming-event-time {
+  white-space: nowrap;
+  text-align: right;
+}
+
+.current-event-time {
+  align-self: start;
+    margin-top: 4px;
+  font-size: clamp(1.5rem, 1.2vw, 2rem);
+  font-weight: 800;
+}
+
+.schedule-upcoming {
+  min-height: 0;
+  margin-top: 12px;
+  overflow: hidden;
+  mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0) 100%);
+  -webkit-mask-image: linear-gradient(to bottom, #000 0%, rgba(0, 0, 0, 0) 100%);
+}
+
+.upcoming-event {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 12px;
+  padding: 9px 0;
+  text-align: left;
+}
+
+.upcoming-event-title {
+  font-size: clamp(0.75rem, 1vw, 1rem);
+  font-weight: 700;
+  line-height: 1.1;
+}
+
+.upcoming-event-time {
+  align-self: start;
+  font-size: clamp(0.7rem, 0.9vw, 0.9rem);
+  font-weight: 700;
 }
 
 .theme-toggle:hover {
