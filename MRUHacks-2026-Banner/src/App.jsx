@@ -80,7 +80,7 @@ function App() {
   }).format(currentTime)
 
   return (
-    <main className="app-shell">
+    <main className={`app-shell ${darkMode ? 'app-shell-dark' : ''}`}>
       <Aurora
         colorStops={["#FADF4B", "#D841A1", "#93FFFF"]}
         blend={0.5}
