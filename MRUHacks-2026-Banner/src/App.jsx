@@ -1,9 +1,14 @@
 import { useEffect, useState } from 'react'
 import Aurora from './components/Aurora'
+import BannerDisplay from './components/BannerDisplay'
+import ClockDisplay from './components/ClockDisplay'
+import DisplayControls from './components/DisplayControls'
+import ScheduleDisplay from './components/ScheduleDisplay'
+import SponsorDisplay from './components/SponsorDisplay'
 import bannerImage from './assets/MRUHacks2026BannerBlack.png'
 import bannerImageWhite from './assets/MRUHacks2026BannerWhite.png'
 import eventsCsv from './assets/Event.csv?raw'
-import { formatEventTime, getVisibleEvents, parseSchedule } from './utils/schedule'
+import { getVisibleEvents, parseSchedule } from './utils/schedule'
 import './App.css'
 
 const events = parseSchedule(eventsCsv)
@@ -88,86 +93,35 @@ function App() {
         speed={0.5}
         lightMode={!darkMode}
       />
-      <img
-        className={`banner-image ${displayMode !== 'banner' || darkMode ? 'banner-image-hidden' : ''}`}
-        src={bannerImage}
-        alt="MRUHacks 2026"
+      <BannerDisplay
+        displayMode={displayMode}
+        darkMode={darkMode}
+        bannerImage={bannerImage}
+        bannerImageWhite={bannerImageWhite}
       />
-      <img
-        className={`banner-image ${displayMode !== 'banner' || !darkMode ? 'banner-image-hidden' : ''}`}
-        src={bannerImageWhite}
-        alt=""
-        aria-hidden="true"
+      <SponsorDisplay
+        displayMode={displayMode}
+        darkMode={darkMode}
+        sponsorImages={sponsorImages}
+        sponsorIndex={sponsorIndex}
       />
-      <section
-        className={`sponsor-stage ${displayMode === 'sponsor' ? '' : 'banner-image-hidden'}`}
-        aria-label="Event sponsor"
-      >
-        {sponsorImages.map((image, index) => (
-          <img
-            className={`sponsor-image ${index === sponsorIndex ? '' : 'sponsor-image-hidden'}`}
-            key={image}
-            src={image}
-            alt="Event sponsor logo"
-          />
-        ))}
-        <strong className={`sponsor-label ${darkMode ? 'sponsor-label-dark' : ''}`}>
-          Brought to you by
-        </strong>
-      </section>
       {clockVisible && (
         <>
-          <section className={`clock-panel ${darkMode ? 'clock-panel-dark' : ''}`} aria-label="Edmonton time">
-            <time className="clock-time">{time}</time>
-            <span className="clock-date">{date}</span>
-          </section>
-          <section className={`schedule-panel ${darkMode ? 'schedule-panel-dark' : ''}`} aria-label="Event schedule">
-            {currentEvent && (
-              <article
-                className="current-event"
-                style={{ '--event-progress': `${currentEventProgress * 100}%` }}
-              >
-                <div className="event-details">
-                  <strong className="current-event-title">{currentEvent.title}</strong>
-                  <span className="current-event-location">{currentEvent.location}</span>
-                </div>
-                <strong className="current-event-time">
-                  {formatEventTime(currentEvent.start)} - {formatEventTime(currentEvent.end)}
-                </strong>
-              </article>
-            )}
-            <div className="schedule-upcoming">
-              {upcomingEvents.map(event => (
-                <article className="upcoming-event" key={event.id}>
-                  <div className="event-details">
-                    <strong className="upcoming-event-title">{event.title}</strong>
-                    <span className="upcoming-event-location">{event.location}</span>
-                  </div>
-                  <strong className="upcoming-event-time">{formatEventTime(event.start)}</strong>
-                </article>
-              ))}
-            </div>
-          </section>
+          <ClockDisplay darkMode={darkMode} time={time} date={date} />
+          <ScheduleDisplay
+            darkMode={darkMode}
+            currentEvent={currentEvent}
+            currentEventProgress={currentEventProgress}
+            upcomingEvents={upcomingEvents}
+          />
         </>
       )}
-      <button
-        className="clock-toggle"
-        type="button"
-        aria-label={clockVisible ? 'Hide clock' : 'Show clock'}
-        aria-pressed={clockVisible}
-        onClick={() => setClockVisible(visible => !visible)}
-      >
-        {clockVisible ? '×' : '◷'}
-      </button>
-      <button
-        className="theme-toggle"
-        type="button"
-        aria-label={darkMode ? 'Switch to light mode' : 'Switch to dark mode'}
-        aria-pressed={darkMode}
-        onClick={() => setDarkMode(mode => !mode)}
-      >
-        {darkMode ? '☀' : '☾'}
-      </button>
+      <DisplayControls
+        clockVisible={clockVisible}
+        darkMode={darkMode}
+        onToggleClock={() => setClockVisible(visible => !visible)}
+        onToggleTheme={() => setDarkMode(mode => !mode)}
+      />
     </main>
   )
 }
