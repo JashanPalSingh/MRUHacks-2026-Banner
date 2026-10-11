@@ -7,25 +7,59 @@ import { formatEventTime, getVisibleEvents, parseSchedule } from './utils/schedu
 import './App.css'
 
 const events = parseSchedule(eventsCsv)
+const sponsorImages = Object.values(import.meta.glob(
+  './assets/sponsors/*.{png,jpg,jpeg,webp,gif}',
+  { eager: true, import: 'default', query: '?url' },
+))
+// const testClockEnabled = true
+// const testClockStart = new Date('2026-10-24T20:00:00-06:00')
+// const testClockMinutesPerSecond = 5
 
 function App() {
   const [darkMode, setDarkMode] = useState(false)
   const [clockVisible, setClockVisible] = useState(false)
   const [currentTime, setCurrentTime] = useState(() => new Date())
-// const [currentTime, setCurrentTime] = useState(
-//   () => new Date('2026-10-24T06:30:00Z')
-// )
+  const [displayMode, setDisplayMode] = useState('banner')
+  const [sponsorIndex, setSponsorIndex] = useState(0)
+
+  // const [currentTime, setCurrentTime] = useState(() => (
+  //   testClockEnabled ? testClockStart : new Date()
+  // ))
 
   useEffect(() => {
     if (!clockVisible) return undefined
+
+    // if (testClockEnabled) {
+    //   const startedAt = Date.now()
+    //   const interval = window.setInterval(() => {
+    //     const elapsedSeconds = (Date.now() - startedAt) / 1000
+    //     setCurrentTime(new Date(
+    //       testClockStart.getTime() + elapsedSeconds * testClockMinutesPerSecond * 60 * 1000,
+    //     ))
+    //   }, 1000)
+    //   return () => window.clearInterval(interval)
+    // }
+
     const interval = window.setInterval(() => setCurrentTime(new Date()), 60000)
     return () => window.clearInterval(interval)
   }, [clockVisible])
 
-// useEffect(() => {
-//   if (!clockVisible) return undefined
-//   return undefined
-// }, [clockVisible])
+  useEffect(() => {
+    if (sponsorImages.length === 0) return undefined
+    const duration = displayMode === 'banner' ? 60000 : 5000
+    const timeout = window.setTimeout(() => {
+      if (displayMode === 'banner') {
+        setSponsorIndex(0)
+        setDisplayMode('sponsor')
+      } else if (sponsorIndex + 1 < sponsorImages.length) {
+        setSponsorIndex(index => index + 1)
+      } else {
+        setSponsorIndex(0)
+        setDisplayMode('banner')
+      }
+    }, duration)
+    return () => window.clearTimeout(timeout)
+  }, [displayMode, sponsorIndex])
 
   const { current: currentEvent, upcoming: upcomingEvents } = getVisibleEvents(events, currentTime)
   const currentEventProgress = currentEvent
@@ -55,16 +89,32 @@ function App() {
         lightMode={!darkMode}
       />
       <img
-        className={`banner-image ${darkMode ? 'banner-image-hidden' : ''}`}
+        className={`banner-image ${displayMode !== 'banner' || darkMode ? 'banner-image-hidden' : ''}`}
         src={bannerImage}
         alt="MRUHacks 2026"
       />
       <img
-        className={`banner-image ${darkMode ? '' : 'banner-image-hidden'}`}
+        className={`banner-image ${displayMode !== 'banner' || !darkMode ? 'banner-image-hidden' : ''}`}
         src={bannerImageWhite}
         alt=""
         aria-hidden="true"
       />
+      <section
+        className={`sponsor-stage ${displayMode === 'sponsor' ? '' : 'banner-image-hidden'}`}
+        aria-label="Event sponsor"
+      >
+        {sponsorImages.map((image, index) => (
+          <img
+            className={`sponsor-image ${index === sponsorIndex ? '' : 'sponsor-image-hidden'}`}
+            key={image}
+            src={image}
+            alt="Event sponsor logo"
+          />
+        ))}
+        <strong className={`sponsor-label ${darkMode ? 'sponsor-label-dark' : ''}`}>
+          Brought to you by
+        </strong>
+      </section>
       {clockVisible && (
         <>
           <section className={`clock-panel ${darkMode ? 'clock-panel-dark' : ''}`} aria-label="Edmonton time">

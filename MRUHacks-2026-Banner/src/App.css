@@ -19,7 +19,7 @@
   top: 50%;
   left: 50%;
   width: auto;
-  height: 50vh;
+  height: 75vh;
   max-width: 90vw;
   object-fit: contain;
   transform: translate(-50%, -50%);
@@ -29,6 +29,58 @@
 
 .banner-image-hidden {
   opacity: 0;
+}
+
+.sponsor-stage {
+  position: absolute;
+  z-index: 1;
+  inset: 0;
+  pointer-events: none;
+  opacity: 1;
+  transition: opacity 2s ease;
+}
+
+.sponsor-stage.banner-image-hidden {
+  opacity: 0;
+}
+
+.sponsor-image {
+  position: absolute;
+  z-index: 1;
+  top: 50%;
+  left: 50%;
+  width: auto;
+  height: 50vh;
+  max-width: 90vw;
+  object-fit: contain;
+  transform: translate(-50%, -50%);
+  opacity: 1;
+  transition: opacity 2s ease;
+}
+
+.sponsor-image-hidden {
+  opacity: 0;
+}
+
+.sponsor-label {
+  position: absolute;
+  z-index: 2;
+  top: 25vh;
+  left: 50%;
+  max-width: 90vw;
+  color: #08060d;
+  font-size: clamp(1.25rem, 3vw, 3rem);
+  font-weight: 900;
+  line-height: 1;
+  text-align: center;
+  text-shadow: 0 2px 14px rgba(255, 255, 255, 0.7);
+  transform: translate(-50%, -100%);
+  white-space: nowrap;
+}
+
+.sponsor-label-dark {
+  color: #fff;
+  text-shadow: 0 2px 14px rgba(0, 0, 0, 0.7);
 }
 
 .theme-toggle {
@@ -103,7 +155,7 @@
 }
 
 .clock-time {
-  font-size: clamp(1px, 15vw, 10rem);
+  font-size: clamp(1rem, 5vw, 5rem);
   font-weight: 900;
   line-height: 1;
   white-space: nowrap;
@@ -111,7 +163,7 @@
 
 .clock-date {
   margin-top: 8px;
-  font-size: clamp(1rem, 1.1vw, 5rem);
+  font-size: clamp(1rem, 2vw, 5rem);
   font-weight: 500;
   line-height: 1.2;
 }
